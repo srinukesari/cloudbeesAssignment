@@ -6,6 +6,10 @@ import (
 )
 
 func ValidateCreatePost(request *pb.CreatePostRequest) error {
+	if request == nil {
+		return fmt.Errorf("request can't be empty")
+	}
+
 	if request.GetCreatePostRequest() == nil {
 		return fmt.Errorf("empty create post request")
 	}
@@ -44,10 +48,6 @@ func ValidateUpdatePost(request *pb.UpdatePostRequest) error {
 
 	if request.UpdatePostRequest.GetPostId() == 0 {
 		return fmt.Errorf("post ID can't be zero")
-	}
-
-	if request.UpdatePostRequest.GetAuthor() == "" {
-		return fmt.Errorf("author can't be empty")
 	}
 
 	return nil

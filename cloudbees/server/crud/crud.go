@@ -8,8 +8,19 @@ import (
 	"strings"
 )
 
+type BlogServerInterpreter interface {
+	CreatePost(ctx context.Context, in *pb.CreatePostRequest) (*pb.CreatePostResponse, error)
+	GetPost(ctx context.Context, in *pb.GetPostRequest) (*pb.GetPostResponse, error)
+	UpdatePost(ctx context.Context, in *pb.UpdatePostRequest) (*pb.UpdatePostResponse, error)
+	DeletePost(ctx context.Context, in *pb.DeletePostRequest) (*pb.DeletePostResponse, error)
+}
+
 type BlogServer struct {
 	pb.UnimplementedBlogServiceServer
+}
+
+func NewBlogServer() BlogServerInterpreter {
+	return &BlogServer{pb.UnimplementedBlogServiceServer{}}
 }
 
 var blogPost = make(map[int32]*pb.BlogPost)
