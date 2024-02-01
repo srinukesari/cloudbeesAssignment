@@ -31,17 +31,25 @@ clientLoop:
 	for {
 		fmt.Print(crud.ClientMenu())
 		fmt.Scan(&op)
-		switch op {
+		var err error
+		switch int(op) {
 		case 1:
-			crud.CreatePostInput(ctx, client)
+			postReq := crud.CreatePostUserInput()
+			err = crud.CreatePost(ctx, client, postReq)
 		case 2:
-			crud.GetPostInput(ctx, client)
+			getReq := crud.GetPostUserInput()
+			err = crud.GetPost(ctx, client, getReq)
 		case 3:
-			crud.UpdatePostInput(ctx, client)
+			updateReq := crud.UpdatePostUserInput()
+			err = crud.UpdatePost(ctx, client, updateReq)
 		case 4:
-			crud.DeletePostInput(ctx, client)
+			deleteReq := crud.DeletePostUserInput()
+			err = crud.DeletePost(ctx, client, deleteReq)
 		default:
 			break clientLoop
+		}
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 }
