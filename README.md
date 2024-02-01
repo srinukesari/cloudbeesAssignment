@@ -14,6 +14,17 @@ Go need to install in your system.
 mockGen to generate mock files,
 protoc to compile *.proto files
 
+*cmd to compile proto :*
+protoc \                                                  
+    --go_out=./proto \
+    --go_opt=paths=source_relative \
+    --go-grpc_out=./proto \
+    --go-grpc_opt=paths=source_relative \
+    ./proto/blog.proto
+
+*cmd to generate mock file*
+mockgen -source=SOURCE_FILE_PATH -destination=DESTINATION_FILE_PATH -package=PACKAGE_NAME
+
 export above mockGen and protoc to path 
 
 to install required packages -> 
