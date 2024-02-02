@@ -9,9 +9,9 @@ cmd : go test ./...
 
 **Pre-requistes:**
 
-Go need to install in your system.
+Go need to be installed in your system.
 
-mockGen to generate mock files,
+install mockGen to generate mock files and
 protoc to compile *.proto files
 
 *cmd to compile proto :*
