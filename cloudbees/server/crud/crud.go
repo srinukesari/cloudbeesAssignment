@@ -37,8 +37,7 @@ func (s *BlogServer) CreatePost(ctx context.Context, in *pb.CreatePostRequest,
 		blogPost[in.CreatePostRequest.PostId] = in.CreatePostRequest
 
 		return &pb.CreatePostResponse{
-			CreatePostResponse: blogPost[in.CreatePostRequest.PostId],
-			Message:            "post created successfully",
+			Message: "post created successfully",
 		}, nil
 	}
 	return nil, fmt.Errorf("duplicate post ID found")
@@ -84,19 +83,25 @@ func (s *BlogServer) UpdatePost(ctx context.Context, in *pb.UpdatePostRequest,
 				post.Content = in.UpdatePostRequest.Content
 			case constant.Tags:
 				post.Tags = in.UpdatePostRequest.Tags
+			case constant.PublicationDate:
+				if in.UpdatePostRequest.PublicationDate.IsValid() {
+					post.PublicationDate = in.UpdatePostRequest.PublicationDate
+				} else {
+					return &pb.UpdatePostResponse{
+						Error: "invlaid PublicationDate",
+					}, nil
+				}
 			default:
 				continue
 			}
 		}
 		blogPost[postID] = post
 		return &pb.UpdatePostResponse{
-			UpdatePostResponse: blogPost[postID],
-			Message:            "updated successfully",
+			Message: "updated successfully",
 		}, nil
 	}
 	return &pb.UpdatePostResponse{
-		UpdatePostResponse: blogPost[postID],
-		Error:              "post not found to update",
+		Error: "post not found to update",
 	}, nil
 }
 

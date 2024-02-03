@@ -16,7 +16,7 @@ func CreatePost(ctx context.Context, client pb.BlogServiceClient, postReq *pb.Cr
 	if err != nil {
 		return fmt.Errorf("error from create post request -> %s", err)
 	}
-	fmt.Println("response from create post request ->", resp)
+	fmt.Println("response from create post request -> ", resp)
 	return nil
 }
 
@@ -25,7 +25,7 @@ func GetPost(ctx context.Context, client pb.BlogServiceClient, getPostReq *pb.Ge
 	if err != nil {
 		return fmt.Errorf("error from get post request -> %s", err)
 	}
-	fmt.Println("response from get post request ->", resp)
+	fmt.Println("response from get post request -> ", resp)
 	return nil
 }
 
@@ -34,7 +34,7 @@ func UpdatePost(ctx context.Context, client pb.BlogServiceClient, updateRequest 
 	if err != nil {
 		return fmt.Errorf("error from update post request -> %v", err)
 	}
-	fmt.Println("response from update post request ->", resp)
+	fmt.Println("response from update post request -> ", resp)
 	return nil
 }
 
@@ -43,6 +43,6 @@ func DeletePost(ctx context.Context, client pb.BlogServiceClient, deletePostReq 
 	if err != nil {
 		return fmt.Errorf("error from delete post request -> %v", err)
 	}
-	fmt.Println("response from delete post request ->", resp)
+	fmt.Println("response from delete post request -> ", resp)
 	return nil
 }

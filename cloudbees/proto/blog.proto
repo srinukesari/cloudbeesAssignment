@@ -27,7 +27,6 @@ message CreatePostRequest {
 }
 
 message CreatePostResponse {
-  BlogPost create_post_response = 1;
   string message = 2;
   string error = 3;
 }
@@ -38,7 +37,6 @@ message UpdatePostRequest{
 }
 
 message UpdatePostResponse{
-  BlogPost update_post_response = 1;
   string message = 2;
   string error = 3;
 }
@@ -49,8 +47,7 @@ message GetPostRequest{
 
 message GetPostResponse{
   BlogPost get_post_response = 1;
-
-  string error = 3;
+  string error = 2;
 }
 
 message DeletePostRequest{

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bufio"
 	constant "cloudbees"
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
+	"strings"
 
 	"cloudbees/client/crud"
 	pb "cloudbees/proto"
@@ -26,12 +30,18 @@ func main() {
 	defer cancel()
 
 	fmt.Println("connected to server, enter number for below operation")
-	var op int
+	reader := bufio.NewReader(os.Stdin)
 clientLoop:
 	for {
 		fmt.Print(crud.ClientMenu())
-		fmt.Scan(&op)
-		var err error
+		in, _ := reader.ReadString('\n')
+
+		op, err := strconv.ParseInt(strings.TrimSpace(in), 10, 64)
+		fmt.Print("cjheck err", err)
+		if err != nil {
+			break clientLoop
+		}
+
 		switch int(op) {
 		case 1:
 			postReq := crud.CreatePostUserInput()
@@ -40,7 +50,7 @@ clientLoop:
 			getReq := crud.GetPostUserInput()
 			err = crud.GetPost(ctx, client, getReq)
 		case 3:
-			updateReq := crud.UpdatePostUserInput()
+			updateReq := crud.UpdatePostUserInput(client)
 			err = crud.UpdatePost(ctx, client, updateReq)
 		case 4:
 			deleteReq := crud.DeletePostUserInput()

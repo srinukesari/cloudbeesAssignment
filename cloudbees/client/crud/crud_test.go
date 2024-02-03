@@ -52,13 +52,7 @@ func TestCreatePost(t *testing.T) {
 				serverMock.
 					EXPECT().
 					CreatePost(gomock.Any(), gomock.Any()).
-					Return(&pb.CreatePostResponse{
-						CreatePostResponse: &pb.BlogPost{
-							PostId: 333,
-							Title:  "test title",
-							Author: "ssr",
-						},
-					}, nil)
+					Return(&pb.CreatePostResponse{Message: "created succesfully"}, nil)
 			},
 			wantErr: false,
 		},
@@ -191,10 +185,6 @@ func TestUpdatePost(t *testing.T) {
 					EXPECT().
 					UpdatePost(gomock.Any(), gomock.Any()).
 					Return(&pb.UpdatePostResponse{
-						UpdatePostResponse: &pb.BlogPost{
-							PostId: 333,
-							Author: "srinu",
-						},
 						Message: "updated successfully",
 					}, nil)
 			},

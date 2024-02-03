@@ -4,6 +4,7 @@ import (
 	"bufio"
 	constant "cloudbees"
 	pb "cloudbees/proto"
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -24,7 +25,7 @@ func CreatePostUserInput() *pb.CreatePostRequest {
 	content, _ := reader.ReadString('\n')
 	fmt.Print("enter author -> ")
 	author, _ := reader.ReadString('\n')
-	fmt.Print("enter publicationdate in YYYY-MM-DD format")
+	fmt.Print("enter publicationdate in YYYY-MM-DD format -> ")
 	date, _ := reader.ReadString('\n')
 
 	date = strings.TrimSpace(date)
@@ -52,11 +53,12 @@ func GetPostUserInput() *pb.GetPostRequest {
 	}
 }
 
-func UpdatePostUserInput() *pb.UpdatePostRequest {
+func UpdatePostUserInput(client pb.BlogServiceClient) *pb.UpdatePostRequest {
 	var postID int32
 	var mask string
 	fmt.Print("Enter post id to Update -> ")
 	fmt.Scan(&postID)
+	fmt.Println("feilds that can updated are author,title,content and publication_date")
 	fmt.Print("Enter mask(updated fields) with comma seperator -> ")
 	fmt.Scan(&mask)
 	updateRequest := &pb.UpdatePostRequest{
@@ -66,29 +68,45 @@ func UpdatePostUserInput() *pb.UpdatePostRequest {
 		Mask: mask,
 	}
 
+	resp, err := client.GetPost(context.Background(), &pb.GetPostRequest{PostId: postID})
+	if err != nil {
+		fmt.Errorf("post not found to update")
+		return nil
+	}
+
 	reader := bufio.NewReader(os.Stdin)
 
 	updatedMask := strings.Split(mask, ",")
 	for _, i := range updatedMask {
 		switch strings.ToLower(i) {
 		case constant.Title:
-			fmt.Print("please enter updated title -> ")
+			fmt.Print("present Title = ", resp.GetPostResponse.Title, "\nplease enter title to update -> ")
 			title, _ := reader.ReadString('\n')
 			updateRequest.UpdatePostRequest.Title = strings.TrimSpace(title)
+
 		case constant.Content:
-			fmt.Print("please enter updated Content -> ")
+			fmt.Print("present Content = ", resp.GetPostResponse.Content, "\nplease enter Content to update -> ")
 			content, _ := reader.ReadString('\n')
 			updateRequest.UpdatePostRequest.Content = strings.TrimSpace(content)
+
 		case constant.Author:
-			fmt.Print("please enter updated author -> ")
+			fmt.Print("present Author = ", resp.GetPostResponse.Author, "\nplease enter author to update -> ")
 			author, _ := reader.ReadString('\n')
 			updateRequest.UpdatePostRequest.Author = strings.TrimSpace(author)
+
 		case constant.Tags:
-			var tags string
-			fmt.Print("please enter updated tags as commaseperated values -> ")
-			fmt.Scan(&tags)
-			tagsList := strings.Split(tags, ",")
+			fmt.Print("present Tags = ", resp.GetPostResponse.Tags, "\nplease enter updated tags as comma seperated values -> ")
+			tags, _ := reader.ReadString('\n')
+			tagsList := strings.Split(strings.TrimSpace(tags), ",")
 			updateRequest.UpdatePostRequest.Tags = tagsList
+
+		case constant.PublicationDate:
+			fmt.Print("present PublicationDate = ", resp.GetPostResponse.PublicationDate.AsTime(), "\nplease enter Publication Date to update in YYYY-MM-DD  -> ")
+			date, _ := reader.ReadString('\n')
+			date = strings.TrimSpace(date)
+			timestamp, _ := time.Parse("2006-01-02", date)
+			timeInProtoFormat := timestamppb.New(timestamp)
+			updateRequest.UpdatePostRequest.PublicationDate = timeInProtoFormat
 		}
 	}
 	return updateRequest
